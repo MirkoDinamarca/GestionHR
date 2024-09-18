@@ -1,3 +1,4 @@
+@ -1,43 +0,0 @@
 # GestionHR
 Sistema destinado al departamento de Recursos Humanos, diseñado principalmente para poder manejar y optimizar la gestión de los empleados dentro de la organización. Ofrece herramientas las cuales permite actualizar los datos personales y laborales de los mismos, así como la gestión de programas de capacitación. Además, permite al usuario externo postularse a vacantes laborales disponibles. Con estas funcionalidades, el área de Recursos Humanos podrá mejorar los procesos de análisis, y la toma de decisiones.
 

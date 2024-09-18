@@ -9,9 +9,10 @@ import {
   faFileAlt,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import useAuth from "../hooks/useAuth";
 
 const Sidebar = () => {
-
+  const { auth, logout } = useAuth();
     // Estado de las vistas de los desplegables
   const [desplegable, setDesplegable] = useState(false);
 
@@ -19,6 +20,10 @@ const Sidebar = () => {
   const handleDesplegable = () => {
     setDesplegable(!desplegable);
   };
+
+  const handleLogout = () => {
+    logout();
+  }
 
   return (
     <aside className="col-span-1">
@@ -56,6 +61,14 @@ const Sidebar = () => {
             <a href="/#" className="flex items-center gap-5 pl-10 tracking-wide"><FontAwesomeIcon size='lg' className="w-5" icon={faCog} /> Configuracion</a>
           </li> */}
         </ul>
+        {/* ESTO DEL BOTON ES TEMPORAL, SOLAMENTE ES PARA PODER CERRAR SESION ACTUALMENTE */}
+        <br />
+        <br />
+        <br />
+        <button onClick={() => handleLogout()} className="bg-indigo-500 text-white uppercase font-bold p-3 rounded-sm mt-5">
+          Cerrar Sesion
+        </button>
+          <Link to="/logout" ></Link>
       </div>
     </div>
   </aside>

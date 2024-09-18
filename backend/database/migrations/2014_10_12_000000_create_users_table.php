@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('legajo')->unique();
             $table->string('dni')->unique();
             $table->string('cuil')->unique();
-            $table->string('correo')->unique();
-            $table->string('clave');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->bigInteger('telefono');
             $table->string('genero');
             $table->date('fecha_ingreso');
