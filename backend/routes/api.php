@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'store']);
 Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth:api');
-Route::get('/user', [UsuarioController::class, 'getUser']);
+Route::get('/user', [UsuarioController::class, 'getUser'])->middleware('auth:api');
+
+
 Route::post('/usuarioNuevo', [UsuarioController::class, 'createUser']);
 Route::get('/usuarios', [UsuarioController::class, 'getAllUser']);
 Route::get('/usuarios/{id}', [UsuarioController::class, 'getUserId']);

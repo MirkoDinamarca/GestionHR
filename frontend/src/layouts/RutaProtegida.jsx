@@ -11,7 +11,7 @@ const RutaProtegida = () => {
         <main className="grid grid-cols-5">
           <Sidebar />
           <div className="h-screen m-0 p-5 col-span-4">
-            <div className="bg-white shadow-lg shadow-blue-200 border rounded-xl h-full">
+            <div className="bg-white shadow-lg shadow-blue-200 border rounded-xl h-full overflow-y-auto">
               <Outlet />
             </div>
           </div>

@@ -20,7 +20,7 @@ const Usuarios = () => {
   }, []);
 
   const handleRedirection = (id) => {
-    navigate(`/usuario/${id}`); // Ruta de redirección con el ID del usuario
+    navigate(`${id}`); // Ruta de redirección con el ID del usuario
   };
 
   return (

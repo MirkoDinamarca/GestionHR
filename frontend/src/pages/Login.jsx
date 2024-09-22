@@ -1,10 +1,11 @@
 import { useState, useContext } from "react";
+import { Navigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useContext(AuthContext);
+  const { login, auth } = useContext(AuthContext);
 
   /**
    * Escucha el evento submit del formulario y llama a la función login 
@@ -16,6 +17,7 @@ const Login = () => {
 
   return (
     <>
+    {auth && auth.id && <Navigate to="/" />}
       <section className="antialiased bg-gradient-to-br from-indigo-100 to-white">
         <div className="container px-6 mx-auto">
           <div className="flex flex-col text-center md:text-left md:flex-row h-screen justify-evenly md:items-center">

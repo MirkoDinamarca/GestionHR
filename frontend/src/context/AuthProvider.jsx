@@ -18,23 +18,19 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       });
-      console.log(response.data);
       const token = response.data.token;
-
       setToken(token);
       localStorage.setItem("token", token);
-      // setAuth(response.data);
+      setAuth(response.data.usuario);
       navigate("/");
     } catch (error) {
       setAuth({});
-    } finally {
       setLoading(false);
     }
   };
 
   // Cerrar sesión
   const logout = () => {
-    console.log('se ejecuta esto')
     setToken(null);
     setAuth({});
     localStorage.removeItem("token");
@@ -55,11 +51,11 @@ export const AuthProvider = ({ children }) => {
           console.log('Error ', error)
           setAuth({});
         }
-        setLoading(false);
       }
+      setLoading(false);
     }
     fetchUser();
-  }, [token])
+  }, [token]) 
 
   
   return (

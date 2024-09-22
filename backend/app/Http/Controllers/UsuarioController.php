@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FamiliaEmpleado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User; // Asegúrate de importar tu modelo User
@@ -11,6 +12,7 @@ class UsuarioController extends Controller
 {
     /**
      * Obtener el perfil del usuario que está autenticado.
+     * (Tiene el middleware de autenticación)
      */
     public function getUser()
     {
@@ -33,7 +35,7 @@ class UsuarioController extends Controller
      */
     public function createUser(Request $request)
     {
-        
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
@@ -76,6 +78,26 @@ class UsuarioController extends Controller
             'estado_civil' => $request->estado_civil,
             'activo' => 1, 
         ]);
+        
+        // Integrantes familiares
+        $integrantes = $request->integrantes;
+
+        // Validar que integrantes no sea un arreglo vacio!
+        // [...]
+        
+        
+        foreach ($integrantes as $integrante) {
+            FamiliaEmpleado::create([
+                'nombre' => $integrante['nombre'],
+                'apellido' => $integrante['apellido'],
+                'convive' => $integrante['convive'],
+                'vinculo' => $integrante['vinculo'],
+                'dni' => $integrante['dni'],
+                'seguro_vida' => $integrante['seguro_vida'],
+                'porcentaje_seguro_vida' => $integrante['porcentaje_seguro_vida'],
+                'usuario_id' => $user->id,
+            ]);
+        }
 
         return response()->json([
             'mensaje' => 'Usuario creado exitosamente',
