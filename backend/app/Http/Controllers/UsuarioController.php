@@ -23,7 +23,7 @@ class UsuarioController extends Controller
                 'mensaje' => 'Usuario no autenticado'
             ], 401);
         }
-        
+
         return response()->json([
             'mensaje' => 'Usuario autenticado',
             'usuario' => $user
@@ -45,7 +45,7 @@ class UsuarioController extends Controller
             'email' => 'required|string|email|unique:usuarios',
             'password' => 'required|min:8',
             'telefono' => 'nullable|integer',
-            'genero' => 'nullable|string',
+            'genero' => 'required|nullable|string',
             'fecha_ingreso' => 'required|date',
             'fecha_nacimiento' => 'required|date',
             'calle' => 'nullable|string',
@@ -56,6 +56,39 @@ class UsuarioController extends Controller
             'nacionalidad' => 'required|string',
             'estado_civil' => 'required|string',
         ]);
+
+        // Integrantes familiares
+        $integrantes = $request->integrantes;
+
+        // Validar que integrantes no sea un arreglo vacio!
+        if (empty($integrantes)) {
+            return response()->json([
+                'mensaje' => 'Debe enviar al menos un integrante'
+            ], 400);
+        }
+
+        // Validar que cada campo de integrante sea requerido
+        foreach ($integrantes as $integrante) {
+            if (!isset($integrante['nombre']) || !isset($integrante['apellido']) || !isset($integrante['convive']) || !isset($integrante['vinculo']) || !isset($integrante['dni']) || !isset($integrante['seguro_vida']) || !isset($integrante['porcentaje_seguro_vida'])) {
+                return response()->json([
+                    'mensaje' => 'Los campos de cada integrante son requeridos'
+                ], 400);
+            }
+        }
+
+        // Validar que al menos uno de los integrantes debe tener seguro de vida
+        $seguro_vida = false;
+        foreach ($integrantes as $integrante) {
+            if ($integrante['seguro_vida']) {
+                $seguro_vida = true;
+                break;
+            }
+        }
+        if (!$seguro_vida) {
+            return response()->json([
+                'mensaje' => 'Al menos un integrante debe tener seguro de vida'
+            ], 400);
+        }
 
         $user = User::create([
             'nombre' => $request->nombre,
@@ -76,16 +109,9 @@ class UsuarioController extends Controller
             'provincia' => $request->provincia,
             'nacionalidad' => $request->nacionalidad,
             'estado_civil' => $request->estado_civil,
-            'activo' => 1, 
+            'activo' => 1,
         ]);
-        
-        // Integrantes familiares
-        $integrantes = $request->integrantes;
 
-        // Validar que integrantes no sea un arreglo vacio!
-        // [...]
-        
-        
         foreach ($integrantes as $integrante) {
             FamiliaEmpleado::create([
                 'nombre' => $integrante['nombre'],
@@ -100,6 +126,7 @@ class UsuarioController extends Controller
         }
 
         return response()->json([
+            'success' => true,
             'mensaje' => 'Usuario creado exitosamente',
             'usuario' => $user
         ], 201);
@@ -107,23 +134,35 @@ class UsuarioController extends Controller
     /**
      * Obtener todos los usuarios
      */
-    public function getAllUser() {
-        $usuarios = User::all(); 
+    public function getAllUser()
+    {
+        $usuarios = User::all();
 
-        return response()->json($usuarios); 
+        return response()->json($usuarios);
     }
 
     public function getUserId($id)
-{
-    $usuario = User::find($id); 
+    {
+        $usuario = User::find($id);
 
-    if (!$usuario) {
-        return response()->json([
-            'mensaje' => 'No se encuentra el usuario'
-        ], 404);
+        if (!$usuario) {
+            return response()->json([
+                'mensaje' => 'No se encuentra el usuario'
+            ], 404);
+        }
+
+        return response()->json($usuario);
     }
 
-    return response()->json($usuario);
-}
+    public function getLastLegajo() {
+        $usuario = User::orderBy('legajo', 'desc')->first();
 
+        if (!$usuario) {
+            return response()->json([
+                'mensaje' => 'No se encuentra el usuario'
+            ], 404);
+        }
+
+        return response()->json($usuario->legajo);
+    }
 }

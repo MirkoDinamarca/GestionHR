@@ -21,6 +21,7 @@ Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth:api
 Route::get('/user', [UsuarioController::class, 'getUser'])->middleware('auth:api');
 
 
-Route::post('/usuarioNuevo', [UsuarioController::class, 'createUser']);
-Route::get('/usuarios', [UsuarioController::class, 'getAllUser']);
-Route::get('/usuarios/{id}', [UsuarioController::class, 'getUserId']);
+Route::post('/usuarioNuevo', [UsuarioController::class, 'createUser'])->middleware('auth:api');
+Route::get('/usuarios/legajo', [UsuarioController::class, 'getLastLegajo'])->middleware('auth:api');
+Route::get('/usuarios', [UsuarioController::class, 'getAllUser'])->middleware('auth:api');
+Route::get('/usuarios/{id}', [UsuarioController::class, 'getUserId'])->middleware('auth:api');

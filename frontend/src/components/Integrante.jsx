@@ -1,9 +1,11 @@
 import Formfield from "./Formfield";
-const Integrante = ({index, integrante, handleChangeIntegrante}) => {
+import { useState } from "react";
+const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteIntegrante}) => {
+
   return (
     <div className="grid grid-cols-6 gap-4 bg-gray-100 p-3 py-5 rounded-md border">
       <div className="col-span-6 text-end">
-        <button className="bg-red-500 px-4 text-white font-medium rounded-md hover:bg-red-600 transition-all duration-150">
+        <button className="bg-red-500 px-4 text-white font-medium rounded-md hover:bg-red-600 transition-all duration-150" onClick={() => handleDeleteIntegrante(index)}>
           Eliminar
         </button>
       </div>

@@ -8,6 +8,8 @@ import {
   faChalkboardTeacher,
   faFileAlt,
   faChevronRight,
+  faCircleExclamation,
+  faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../hooks/useAuth";
 

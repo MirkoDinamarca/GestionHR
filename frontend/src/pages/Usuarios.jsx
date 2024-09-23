@@ -9,7 +9,17 @@ const Usuarios = () => {
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/usuarios");
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/login");
+        }
+        const response = await axios.get("http://localhost:8000/api/usuarios", 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setUsuarios(response.data);
       } catch (error) {
         console.log("Error", error);

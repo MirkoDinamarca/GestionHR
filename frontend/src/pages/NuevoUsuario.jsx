@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Formfield from "../components/Formfield";
 import Integrante from "../components/Integrante";
+import Alerta from "../components/Alerta";
 import axios from "axios";
 
 const NuevoUsuario = () => {
+  const navigate = useNavigate();
   const [integrantesFamiliares, setIntegrantesFamiliares] = useState([]);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -24,7 +28,7 @@ const NuevoUsuario = () => {
     provincia: "",
     nacionalidad: "",
     estado_civil: "",
-    integrantes: []
+    integrantes: [],
   });
 
   // Al momento de escuchar por un cambio en los inputs setea el valor en el estado
@@ -40,15 +44,63 @@ const NuevoUsuario = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+      }
       const response = await axios.post(
         "http://localhost:8000/api/usuarioNuevo",
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+      const {success} = response.data;
+      if (success) {
+        navigate('/usuarios');
+      }
       console.log("Usuario creado con éxito:", response.data);
-    } catch (error) {
-      console.error("Error al crear el usuario:", error);
+    } catch (e) {
+      if (e.response.data.mensaje) {
+        setError(e.response.data.mensaje);
+        return;
+      } else {
+        setError(e.response.data.errors);
+      }
+      console.error("Error al crear el usuario:", e);
     }
   };
+
+  /**
+   * Funcion que se encarga de capturar el ultimo legajo generado en la base de datos
+   */
+  const legajoFromDatabase = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+      }
+      const response = await axios.get(
+        "http://localhost:8000/api/usuarios/legajo",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setFormData({
+        ...formData,
+        legajo: (Number(response.data) + 1).toString().padStart(4, "0"),
+      });
+    } catch (e) {
+      console.error("Error", e);
+    }
+  };
+  useEffect(() => {
+    legajoFromDatabase();
+  }, []);
 
   /**
    * Genera un nuevoIntegrante en el formulario cada vez que se presiona el botón
@@ -57,7 +109,7 @@ const NuevoUsuario = () => {
   const handleNuevoIntegrante = () => {
     event.preventDefault();
 
-    const nuevoIntegrante = { 
+    const nuevoIntegrante = {
       id: Date.now(),
       nombre: "",
       apellido: "",
@@ -66,12 +118,12 @@ const NuevoUsuario = () => {
       dni: "",
       seguro_vida: "",
       porcentaje_seguro_vida: "",
-     }
+    };
 
     // El formulario del formData se actualiza con el nuevo integrante
-    setFormData(estadoPrevio => ({
+    setFormData((estadoPrevio) => ({
       ...estadoPrevio,
-      integrantes: [...estadoPrevio.integrantes, nuevoIntegrante]
+      integrantes: [...estadoPrevio.integrantes, nuevoIntegrante],
     }));
 
     setIntegrantesFamiliares([...integrantesFamiliares, nuevoIntegrante]);
@@ -80,22 +132,38 @@ const NuevoUsuario = () => {
   /**
    * Función que se encarga de manejar los cambios en los integrantes familiares
    * Al escuchar por un cambio se modifica el integrante a traves del index
-   * Nuevamente se setean los estados de integrantesFamiliares y formData 
+   * Nuevamente se setean los estados de integrantesFamiliares y formData
    */
   const handleChangeIntegrante = (index, campo, value) => {
     const integrantes = [...integrantesFamiliares];
     integrantes[index][campo] = value;
     setIntegrantesFamiliares(integrantes);
 
-    setFormData(estadoPrevio => ({
+    setFormData((estadoPrevio) => ({
       ...estadoPrevio,
-      integrantes: integrantes
+      integrantes: integrantes,
     }));
-  }
+  };
 
+  /**
+   * Eliminar el componente del integrante
+   */
+  const handleDeleteIntegrante = (index) => {
+    const integrantes = [...integrantesFamiliares];
+    integrantes.splice(index, 1);
+    setIntegrantesFamiliares(integrantes);
+    setFormData((estadoPrevio) => ({
+      ...estadoPrevio,
+      integrantes: integrantes,
+    }));
+  };
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Crear Nuevo Usuario</h2>
+
+      {/* Si el error es un string se muestra la alerta */}
+      {typeof error === "string" && <Alerta mensaje={error} tipo="red" />}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <section className="grid grid-cols-4 gap-4">
           <div className="col-span-4">
@@ -113,6 +181,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el nombre del usuario"
+            error={error?.nombre}
           />
 
           <Formfield
@@ -124,16 +193,19 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el apellido del usuario"
+            error={error?.apellido}
           />
           <Formfield
             label="N° de Legajo"
-            labelClass="block text-gray-700 font-bold text-gray-500"
-            type="number"
+            labelClass="block text-gray-700 font-bold text-gray-500 disabled"
+            type="text"
             name="legajo"
             value={formData.legajo}
             onChange={handleChange}
-            classes="w-full p-2 border border-gray-300 rounded-md"
+            classes="w-full p-2 border border-gray-300 rounded-md bg-gray-100"
             placeholder="Ingrese el legajo"
+            readonly={true}
+            error={error?.legajo}
           />
 
           <Formfield
@@ -145,6 +217,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el DNI"
+            error={error?.dni}
           />
 
           <Formfield
@@ -156,6 +229,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el CUIL"
+            error={error?.cuil}
           />
 
           <Formfield
@@ -167,6 +241,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el correo"
+            error={error?.email}
           />
 
           <Formfield
@@ -178,6 +253,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la contraseña"
+            error={error?.password}
           />
 
           <Formfield
@@ -189,6 +265,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el telefono"
+            error={error?.telefono}
           />
 
           <div>
@@ -204,6 +281,11 @@ const NuevoUsuario = () => {
               <option value="Femenino">Femenino</option>
               <option value="Otro">Otro</option>
             </select>
+            {error?.genero && (
+              <div className="invalid-feedback text-red-600 text-sm font-medium">
+                {error?.genero}
+              </div>
+            )}
           </div>
 
           <Formfield
@@ -214,6 +296,7 @@ const NuevoUsuario = () => {
             value={formData.fecha_ingreso}
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
+            error={error?.fecha_ingreso}
           />
 
           <Formfield
@@ -224,6 +307,7 @@ const NuevoUsuario = () => {
             value={formData.fecha_nacimiento}
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
+            error={error?.fecha_nacimiento}
           />
 
           <div>
@@ -242,6 +326,11 @@ const NuevoUsuario = () => {
               <option value="Divorciado/a">Divorciado/a</option>
               <option value="Viudo/a">Viudo/a</option>
             </select>
+            {error?.estado_civil && (
+              <div className="invalid-feedback text-red-600 text-sm font-medium">
+                {error?.estado_civil}
+              </div>
+            )}
           </div>
 
           <hr className="col-span-4 m-3" />
@@ -259,6 +348,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la calle"
+            error={error?.calle}
           />
 
           <Formfield
@@ -270,6 +360,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el número"
+            error={error?.numero}
           />
 
           <Formfield
@@ -281,6 +372,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la ciudad"
+            error={error?.ciudad}
           />
 
           <Formfield
@@ -292,6 +384,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el código postal"
+            error={error?.cp}
           />
 
           <Formfield
@@ -303,6 +396,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la provincia"
+            error={error?.provincia}
           />
 
           <Formfield
@@ -314,6 +408,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la nacionalidad"
+            error={error?.nacionalidad}
           />
 
           <hr className="col-span-4 m-3" />
@@ -327,7 +422,13 @@ const NuevoUsuario = () => {
           <div className="col-span-4">
             <section id="containerIntegrantesFamiliares" className="space-y-5">
               {integrantesFamiliares.map((integrante, index) => (
-                <Integrante key={integrante.id || index} index={index} integrante={integrante} handleChangeIntegrante={handleChangeIntegrante}  />
+                <Integrante
+                  key={integrante.id || index}
+                  index={index}
+                  integrante={integrante}
+                  handleChangeIntegrante={handleChangeIntegrante}
+                  handleDeleteIntegrante={handleDeleteIntegrante}
+                />
               ))}
             </section>
             <div className="text-center mt-3">

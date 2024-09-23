@@ -9,7 +9,17 @@ const UsuarioDetalles = () => {
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/usuarios/${id}`); 
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/login");
+        }
+        const response = await axios.get(`http://localhost:8000/api/usuarios/${id}`, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        ); 
         setUsuario(response.data);
       } catch (error) {
         console.error("Error al obtener el usuario", error);
