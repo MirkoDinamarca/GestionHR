@@ -143,16 +143,18 @@ class UsuarioController extends Controller
 
     public function getUserId($id)
     {
-        $usuario = User::find($id);
-
+        // Encuentra al usuario junto con sus familiares
+        $usuario = User::with('familiares')->find($id); 
+    
         if (!$usuario) {
             return response()->json([
                 'mensaje' => 'No se encuentra el usuario'
             ], 404);
         }
-
+    
         return response()->json($usuario);
     }
+    
 
     public function getLastLegajo() {
         $usuario = User::orderBy('legajo', 'desc')->first();

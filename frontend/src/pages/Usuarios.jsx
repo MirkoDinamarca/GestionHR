@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { useNavigate } from 'react-router-dom'; 
+import Breadcrumb from '../components/Breadcrumb';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
-  const navigate = useNavigate(); // Hook para manejar la redirección
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsuarios = async () => {
@@ -30,18 +31,24 @@ const Usuarios = () => {
   }, []);
 
   const handleRedirection = (id) => {
-    navigate(`${id}`); // Ruta de redirección con el ID del usuario
+    navigate(`${id}`); 
   };
 
+  const breadcrumbItems = [
+    { label: 'Usuarios', link: '/usuarios' },
+    { label: ' Historico Empleados' }
+  ];
+
+  
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Empleados</h2>
-      <button 
-        onClick={() => navigate('/nuevo-usuario')} 
-        className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 mb-4">
-        Nuevo Empleado
+      <Breadcrumb items={breadcrumbItems} />
+    <div class="mb-4">
+      <button onClick={() => navigate('nuevo-usuario')} className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200">
+          Nuevo Empleado
       </button>
-
+    </div>
+    
       <ul className="space-y-4">
         {usuarios.map((usuario) => (
           <li 
@@ -50,10 +57,11 @@ const Usuarios = () => {
             onClick={() => handleRedirection(usuario.id)} 
           >
             <img src="/usuario.png" alt={`${usuario.nombre} ${usuario.apellido}`} className="w-16 h-16 rounded-full mr-4"/>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold">{usuario.nombre} {usuario.apellido}</h3>
+            <div className="flex-1 flex flex-col md:flex-row items-center md:items-start space-y-2 md:space-y-0 md:space-x-4">
+              <p className="text-gray-600">{usuario.nombre} {usuario.apellido}</p>
               <p className="text-gray-600">Legajo: {usuario.legajo}</p>
-              <p className="text-gray-600">Fecha de Ingreso: {new Date(usuario.fecha_ingreso).toLocaleDateString('es-ES')}</p>
+              <p className="text-gray-600">Email: {usuario.email}</p>
+              <p className="text-gray-600">Ingreso: {new Date(usuario.fecha_ingreso).toLocaleDateString('es-ES')}</p>
               <p className="text-gray-600">Estado: {usuario.activo ? 'Activo' : 'Inactivo'}</p>
             </div>
           </li>

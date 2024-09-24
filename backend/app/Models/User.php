@@ -75,4 +75,9 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function familiares()
+    {
+        return $this->hasMany(FamiliaEmpleado::class, 'usuario_id');
+    }
 }
