@@ -6,6 +6,8 @@ import Usuarios from "./pages/Usuarios";
 import NuevoUsuario from "./pages/NuevoUsuario";
 import { AuthProvider } from "./context/AuthProvider";
 import ListaUsuario from "./pages/listaUsuario.jsx";
+import ExamenesMedicos from "./pages/ExamenesMedicos.jsx";
+import TabsPages from "./pages/TabsPages.jsx";
 
 function App() {
   return (
@@ -26,9 +28,12 @@ function App() {
 
           {/* Usuarios / Empleados */}
           <Route path="/usuarios" element={<RutaProtegida />}>
-            <Route index element={<Usuarios/>} />
+            <Route index element={<Usuarios />} />
             <Route path="nuevo-usuario" element={<NuevoUsuario />} />
-            <Route path=":id" element={<ListaUsuario />} />
+            <Route path=":id" element={<TabsPages />}>
+              <Route path="datos" index element={<ListaUsuario />} />
+              <Route path="examenes" element={<ExamenesMedicos />} />
+            </Route>
           </Route>
         </Routes>
       </AuthProvider>

@@ -19,12 +19,25 @@ export const AuthProvider = ({ children }) => {
         password,
       });
       const token = response.data.token;
-      setToken(token);
-      localStorage.setItem("token", token);
-      setAuth(response.data.usuario);
-      navigate("/");
+      const usuario = response.data.usuario;
+
+      console.log('Usuario ', usuario);
+      console.log('Token ', token);
+
+      if (usuario) {
+        setToken(token);
+        localStorage.setItem("token", token);
+        setAuth(usuario);
+        navigate("/");
+      } else {
+        setAuth({ error: response.data.mensaje });
+        setLoading(false);
+      }
+
     } catch (error) {
-      setAuth({});
+      console.log('Error desde el catch', error.response.data.mensaje)
+      setAuth({ error: error.response?.data?.mensaje || "Error de autenticación" });	
+      console.log('La autenticacion', auth);
       setLoading(false);
     }
   };

@@ -33,7 +33,7 @@ const Sidebar = () => {
       <div className="bg-white shadow-lg shadow-blue-200 border rounded-xl h-full">
         <article className="p-10">
           <h1 className="text-4xl font-semibold tracking-wide">GestionHR</h1>
-          <small>Lorem ipsum dolor sit amet consectetur </small>
+          <small>Sistema Integrado para Recursos Humanos </small>
         </article>
         <ul className='text-gray-700'>
           <li className="bg-gradient-to-r from-indigo-200 border-l-4 border-l-indigo-700 py-2 font-semibold">

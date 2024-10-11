@@ -174,7 +174,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Nombre del usuario"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="nombre"
             value={formData.nombre}
@@ -186,7 +186,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Apellido del usuario"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="apellido"
             value={formData.apellido}
@@ -197,7 +197,7 @@ const NuevoUsuario = () => {
           />
           <Formfield
             label="N° de Legajo"
-            labelClass="block text-gray-700 font-bold text-gray-500 disabled"
+            labelClass="block text-gray-700 font-bold text-gray-700 disabled"
             type="text"
             name="legajo"
             value={formData.legajo}
@@ -210,7 +210,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="N° de DNI"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="dni"
             value={formData.dni}
@@ -222,7 +222,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="N° de CUIL"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="cuil"
             value={formData.cuil}
@@ -234,7 +234,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Ingrese el correo"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="email"
             name="email"
             value={formData.email}
@@ -246,7 +246,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Ingrese la contraseña"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="password"
             name="password"
             value={formData.password}
@@ -258,7 +258,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Ingrese el telefono"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="telefono"
             value={formData.telefono}
@@ -269,7 +269,7 @@ const NuevoUsuario = () => {
           />
 
           <div>
-            <label className="block font-bold text-gray-500">Género:</label>
+            <label className="block font-bold text-gray-700">Género:</label>
             <select
               name="genero"
               value={formData.genero}
@@ -290,7 +290,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Fecha de Ingreso"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="date"
             name="fecha_ingreso"
             value={formData.fecha_ingreso}
@@ -301,7 +301,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Fecha de Nacimiento"
-            labelClass="block font-bold text-gray-500"
+            labelClass="block font-bold text-gray-700"
             type="date"
             name="fecha_nacimiento"
             value={formData.fecha_nacimiento}
@@ -311,7 +311,7 @@ const NuevoUsuario = () => {
           />
 
           <div>
-            <label className="block text-gray-500 font-bold">
+            <label className="block text-gray-700 font-bold">
               Estado Civil:
             </label>
             <select
@@ -341,7 +341,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Calle"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="calle"
             value={formData.calle}
@@ -353,7 +353,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Número"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="numero"
             value={formData.numero}
@@ -365,7 +365,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Ciudad"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="ciudad"
             value={formData.ciudad}
@@ -377,7 +377,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Código Postal (CP)"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="cp"
             value={formData.cp}
@@ -389,7 +389,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Provincia"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="provincia"
             value={formData.provincia}
@@ -401,7 +401,7 @@ const NuevoUsuario = () => {
 
           <Formfield
             label="Nacionalidad"
-            labelClass="block text-gray-700 font-bold text-gray-500"
+            labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="nacionalidad"
             value={formData.nacionalidad}

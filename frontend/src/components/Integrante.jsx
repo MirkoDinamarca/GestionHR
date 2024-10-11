@@ -13,7 +13,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       <Formfield
         divClass="col-span-1"
         label="Apellido del integrante"
-        labelClass="block font-bold text-gray-500"
+        labelClass="block font-bold text-gray-700"
         type="text"
         name='apellido'
         value={integrante.apellido}
@@ -25,7 +25,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       <Formfield
         divClass="col-span-1"
         label="Nombre del integrante"
-        labelClass="block font-bold text-gray-500"
+        labelClass="block font-bold text-gray-700"
         type="text"
         name='nombre'
         value={integrante.nombre}
@@ -35,7 +35,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       />
 
       <div className="col-span-1">
-        <label htmlFor="" className="block font-bold text-gray-500">
+        <label htmlFor="" className="block font-bold text-gray-700">
           ¿Convive?
         </label>
         <select
@@ -51,7 +51,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       </div>
 
       <div className="col-span-1">
-        <label className="block font-bold text-gray-500">
+        <label className="block font-bold text-gray-700">
           Vínculo
         </label>
         <select
@@ -70,7 +70,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       <Formfield
         divClass="col-span-1"
         label="DNI del integrante"
-        labelClass="block font-bold text-gray-500"
+        labelClass="block font-bold text-gray-700"
         type="text"
         name='dni'
         value={integrante.dni}
@@ -80,7 +80,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       />
 
       <div className="col-span-2">
-        <label htmlFor="" className="block font-bold text-gray-500">
+        <label htmlFor="" className="block font-bold text-gray-700">
           ¿Es apto para el seguro de vida?
         </label>
         <select
@@ -98,7 +98,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
       <Formfield
         divClass="col-span-2"
         label="En caso de seleccionar 'Si' ingrese el porcentaje"
-        labelClass="block font-bold text-gray-500"
+        labelClass="block font-bold text-gray-700"
         type="number"
         name='porcentaje_seguro_vida'
         value={integrante.porcentaje_seguro_vida}

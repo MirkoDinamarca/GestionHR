@@ -50,7 +50,6 @@ class User extends Authenticatable implements JWTSubject
         'nacionalidad',
         'estado_civil',
         'activo',
-
     ];
 
     /**

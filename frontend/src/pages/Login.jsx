@@ -1,12 +1,13 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
+import Alerta from "../components/Alerta";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login, auth } = useContext(AuthContext);
-
+  const [alerta, setAlerta] = useState(null);
   /**
    * Escucha el evento submit del formulario y llama a la función login 
    */
@@ -14,6 +15,16 @@ const Login = () => {
     e.preventDefault();
     login(email, password);
   };
+  
+  // Si auth es un objeto vacío, se muestra un mensaje de error
+  useEffect(() => {
+    if (auth.error) {
+      setAlerta({
+        mensaje: auth.error,
+        tipo: "red",
+      });
+    }
+  }, [auth]);
 
   return (
     <>
@@ -26,18 +37,19 @@ const Login = () => {
                 <img src="/logo.png" className="w-24" alt="" />
               </div>
               <h1 className="text-5xl text-gray-800 font-bold">GestionHR</h1>
-              <p className="w-5/12 mx-auto md:mx-0 text-gray-500">
+              <p className="w-5/12 mx-auto md:mx-0 text-gray-700">
                 Inicia sesión para poder gestionar el sistema
               </p>
             </div>
             <div className="w-full md:w-full lg:w-9/12 mx-auto md:mx-0">
+              {alerta && <Alerta mensaje={alerta.mensaje} tipo={alerta.tipo} />}
               <div className="bg-white p-10 flex flex-col w-full shadow-xl rounded-xl">
                 <h2 className="text-2xl font-bold text-gray-800 text-left mb-5">
                   Iniciar Sesión
                 </h2>
                 <form onSubmit={handleSubmit} method="POST" className="w-full">
                   <div id="input" className="flex flex-col w-full my-5">
-                    <label htmlFor="email" className="text-gray-500 mb-2">
+                    <label htmlFor="email" className="text-gray-700 mb-2">
                       Email
                     </label>
                     <input
@@ -50,7 +62,7 @@ const Login = () => {
                     />
                   </div>
                   <div id="input" className="flex flex-col w-full my-5">
-                    <label htmlFor="password" className="text-gray-500 mb-2">
+                    <label htmlFor="password" className="text-gray-700 mb-2">
                       Contraseña
                     </label>
                     <input
@@ -87,14 +99,14 @@ const Login = () => {
                         <div className="font-bold">Ingresar</div>
                       </div>
                     </button>
-                    <div className="flex justify-evenly mt-5">
+                    {/* <div className="flex justify-evenly mt-5">
                       <a
                         href="#"
-                        className="w-full text-center font-medium text-gray-500"
+                        className="w-full text-center font-medium text-gray-700"
                       >
                         ¿Olvidaste tu contraseña?
                       </a>
-                    </div>
+                    </div> */}
                   </div>
                 </form>
               </div>
