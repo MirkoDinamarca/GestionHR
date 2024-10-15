@@ -6,6 +6,7 @@ import axios from "axios";
 const ExamenesMedicos = () => {
   const [examenes, setExamenes] = useState([]);
   const [error, setError] = useState(null);
+  const [archivos, setArchivos] = useState([]);
   const { id } = useParams();
 
   const handleStateModal = (id, examenId = null) => {
@@ -26,6 +27,35 @@ const ExamenesMedicos = () => {
       fechaVencimiento.setDate(fechaVencimiento.getDate() + 1);
       document.getElementById("fechaVencimiento").textContent =
         fechaVencimiento.toLocaleDateString("es-ES");
+
+      // Archivos
+      console.log("Estos son los archivos => ", examen.archivos);
+      const archivosContainer = document.getElementById(
+        "archivosExamenesMedicosView"
+      );
+      archivosContainer.innerHTML = "";
+      for (let i = 0; i < examen.archivos.length; i++) {
+        const archivo = examen.archivos[i];
+        console.log("Archivo => ", archivo);
+        const article = document.createElement("article");
+        const spanName = document.createElement("span");
+        const spanDownload = document.createElement("span");
+        spanName.className =
+          "bg-gray-100 p-1 border border-blue-200 border-r-0 rounded-md rounded-tr-none rounded-br-none";
+        spanName.textContent = archivo.archivo;
+        spanDownload.className =
+          "p-1 bg-blue-100 border border-blue-200 border-l-0 rounded-md rounded-tl-none rounded-bl-none text-blue-500 hover:bg-blue-200 transition-all duration-150 cursor-pointer";
+        spanDownload.textContent = "Descargar";
+        spanDownload.addEventListener("click", () =>
+          window.open(
+            `http://localhost:8000/api/examenes/download/${archivo.archivo}`
+          )
+        );
+        article.className = "flex";
+        article.appendChild(spanName);
+        article.appendChild(spanDownload);
+        archivosContainer.appendChild(article);
+      }
     }
   };
 
@@ -36,6 +66,7 @@ const ExamenesMedicos = () => {
     fechaVencimiento: "",
     observacion: "",
     usuario_id: id,
+    archivos: [],
   });
 
   const handleFormChange = (e) => {
@@ -55,11 +86,13 @@ const ExamenesMedicos = () => {
       if (!token) {
         navigate("/login");
       }
+      formData.archivos = archivos;
       const response = await axios.post(
         "http://localhost:8000/api/examenes/add",
         formData,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -111,9 +144,79 @@ const ExamenesMedicos = () => {
       console.error("Error al obtener los examenes", error);
     }
   };
+
+  /**
+   * Maneja la carga de los archivos de los examenes médicos
+   */
+  const handleFileChange = (e) => {
+    e.preventDefault();
+    let nuevosArchivos = Array.from(e.target.files);
+
+    // Verificar que los archivos sean png, jpg o pdf y mostrar un error si no lo son
+    const tiposPermitidos = ["image/png", "image/jpg", "application/pdf"];
+    let archivosInvalidos = nuevosArchivos.filter(
+      (archivo) => !tiposPermitidos.includes(archivo.type)
+    );
+    if (archivosInvalidos.length > 0) {
+      setError("Solo se permiten archivos png, jpg o pdf");
+      return;
+    }
+
+
+    setArchivos([...archivos, ...nuevosArchivos]);
+  };
+
+  const handleClick = (id) => {
+    event.preventDefault();
+    document.getElementById(id).click();
+  };
+
+  const handleDeleteFile = (name) => {
+    const archivosContainer = document.getElementById(
+      "archivosExamenesMedicos"
+    );
+    console.log("Estos son los archivos => ", archivos);
+    const files = archivos.filter((archivo) => archivo.name !== name);
+    archivosContainer.innerHTML = "";
+    console.log("Estos son los archivos ya filtrados => ", files);
+    setArchivos(files);
+  };
+
+  const createFilesHtml = (files) => {
+    const archivosContainer = document.getElementById(
+      "archivosExamenesMedicos"
+    );
+    archivosContainer.innerHTML = "";
+    for (let i = 0; i < files.length; i++) {
+      const archivo = files[i];
+      const article = document.createElement("article");
+      const spanName = document.createElement("span");
+      const spanDelete = document.createElement("span");
+      spanName.className =
+        "bg-gray-100 p-1 border border-blue-200 border-r-0 rounded-md rounded-tr-none rounded-br-none";
+      spanName.textContent = archivo.name;
+      spanDelete.className =
+        "p-1 bg-red-100 border border-red-200 border-l-0 rounded-md rounded-tl-none rounded-bl-none text-red-500 hover:bg-red-200 transition-all duration-150 cursor-pointer";
+      spanDelete.textContent = "Eliminar";
+      spanDelete.addEventListener("click", () =>
+        handleDeleteFile(archivo.name)
+      );
+      article.className = "flex";
+      article.appendChild(spanName);
+      article.appendChild(spanDelete);
+      archivosContainer.appendChild(article);
+    }
+  };
+
+  // Carga los examenes médicos al cargar la página
   useEffect(() => {
     tableExamenes();
   }, []);
+
+  // Actualiza la vista de los archivos al cambiar el estado de archivos
+  useEffect(() => {
+    createFilesHtml(archivos);
+  }, [archivos]);
 
   return (
     <section>
@@ -251,10 +354,37 @@ const ExamenesMedicos = () => {
                   placeholder="Ingrese una breve observación"
                 ></textarea>
               </div>
+
+              <div className="col-span-2">
+                <label className="block font-bold text-gray-700">
+                  Archivos <small>(Opcional)</small>
+                </label>
+                <div className="mb-5">
+                  <input
+                    type="file"
+                    id="fileExamenes"
+                    hidden
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                  <button
+                    className="bg-blue-400 border border-sky-600 rounded-md font-bold p-1 text-white px-10 hover:bg-blue-500 transition-all duration-200"
+                    onClick={() => handleClick("fileExamenes")}
+                  >
+                    Subir archivos
+                  </button>
+                </div>
+                <div id="archivosExamenesMedicos" className="space-y-4"></div>
+                {error?.archivos && (
+                  <div className="invalid-feedback text-red-600 text-sm font-medium">
+                    {error?.archivos}
+                  </div>
+                )}
+              </div>
             </section>
             <div className="flex justify-end gap-3">
               <button
-                className="bg-red-500 text-white px-4 py-2 text-sm font-bold tracking-wide rounded"
+                className="bg-gray-400 text-white px-4 py-2 text-sm font-bold tracking-wide rounded cursor-pointer hover:bg-gray-500 transition-all duration-200"
                 onClick={() => handleStateModal("modal_add")}
               >
                 Cerrar
@@ -293,6 +423,11 @@ const ExamenesMedicos = () => {
             <div>
               <p className="font-semibold mr-2">Fecha vencimiento:</p>
               <p id="fechaVencimiento">5 días</p>
+            </div>
+
+            <div className="col-span-2">
+              <label className="block font-bold text-gray-700">Archivos</label>
+              <div id="archivosExamenesMedicosView" className="space-y-4"></div>
             </div>
           </section>
           <div className="flex justify-end gap-3">

@@ -30,3 +30,4 @@ Route::get('/usuarios/{id}', [UsuarioController::class, 'getUserId'])->middlewar
 # Examenes
 Route::post('/examenes/add', [ExamenesController::class, 'store'])->middleware('auth:api');
 Route::get('/examenes/usuario/{id}', [ExamenesController::class, 'getUserExamenes'])->middleware('auth:api');
+Route::get('/examenes/download/{filename}', [ExamenesController::class, 'download_file']);

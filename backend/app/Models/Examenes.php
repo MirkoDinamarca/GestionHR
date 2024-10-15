@@ -18,4 +18,8 @@ class Examenes extends Model
         'observacion',
         'usuario_id',
     ];
+
+    public function archivos() {
+        return $this->hasMany(ArchivosExamenes::class, 'examen_id');
+    }
 }
