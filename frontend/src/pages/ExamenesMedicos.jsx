@@ -5,10 +5,14 @@ import axios from "axios";
 
 const ExamenesMedicos = () => {
   const [examenes, setExamenes] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState([]);
   const [archivos, setArchivos] = useState([]);
   const { id } = useParams();
 
+  /**
+   * Muestra u oculta un modal
+   * Crea el HTML de los archivos subidos cuando se visualiza el modal para poder descargarlos
+   */
   const handleStateModal = (id, examenId = null) => {
     event.preventDefault();
     const modal = document.getElementById(id);
@@ -29,7 +33,6 @@ const ExamenesMedicos = () => {
         fechaVencimiento.toLocaleDateString("es-ES");
 
       // Archivos
-      console.log("Estos son los archivos => ", examen.archivos);
       const archivosContainer = document.getElementById(
         "archivosExamenesMedicosView"
       );
@@ -69,6 +72,9 @@ const ExamenesMedicos = () => {
     archivos: [],
   });
 
+  /**
+   * Cada vez que un campo del formulario cambia, actualiza el estado de formData
+   */
   const handleFormChange = (e) => {
     setFormData({
       ...formData,
@@ -124,6 +130,9 @@ const ExamenesMedicos = () => {
     }
   };
 
+  /**
+   * Carga los examenes médicos del usuario en la tabla
+   */
   const tableExamenes = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -150,16 +159,24 @@ const ExamenesMedicos = () => {
    */
   const handleFileChange = (e) => {
     e.preventDefault();
+    console.log('Entra aca si en el handleFileChange');
     let nuevosArchivos = Array.from(e.target.files);
 
     // Verificar que los archivos sean png, jpg o pdf y mostrar un error si no lo son
-    const tiposPermitidos = ["image/png", "image/jpg", "application/pdf"];
+    const tiposPermitidos = ["image/png", "image/jpg", "image/jpeg", "application/pdf"];
     let archivosInvalidos = nuevosArchivos.filter(
       (archivo) => !tiposPermitidos.includes(archivo.type)
     );
     if (archivosInvalidos.length > 0) {
-      setError("Solo se permiten archivos png, jpg o pdf");
+      console.log('Entro al if de archivos invalidos');
+      let errorArchivo = {
+        archivos: "Solo se permiten archivos png, jpg, jpeg o pdf",
+      }
+      console.log("Error => ", error);	
+      setError(errorArchivo);
       return;
+    } else {
+      setError([]);
     }
 
 
@@ -171,17 +188,21 @@ const ExamenesMedicos = () => {
     document.getElementById(id).click();
   };
 
+  /**
+   * Elimina un archivo de la lista de archivos 
+   */
   const handleDeleteFile = (name) => {
     const archivosContainer = document.getElementById(
       "archivosExamenesMedicos"
     );
-    console.log("Estos son los archivos => ", archivos);
     const files = archivos.filter((archivo) => archivo.name !== name);
     archivosContainer.innerHTML = "";
-    console.log("Estos son los archivos ya filtrados => ", files);
     setArchivos(files);
   };
 
+  /**
+   * Genera el HTML de los archivos subidos 
+   */
   const createFilesHtml = (files) => {
     const archivosContainer = document.getElementById(
       "archivosExamenesMedicos"
@@ -207,6 +228,20 @@ const ExamenesMedicos = () => {
       archivosContainer.appendChild(article);
     }
   };
+
+  /**
+   * Cuando escucha un cambio en las fechas, si es la 'Fecha Realizado', coloca un atributo mínimo en la 'Fecha Vencimiento'
+   */
+  const handleDates = (date) => {
+    console.log('Date ID', date.target.id)
+    if (date.target.id == 'fechaRealizado') {
+      document.getElementById('fechaVencimiento').setAttribute('min', date.target.value);	
+    } else {
+      document.getElementById('fechaRealizado').setAttribute('max', date.target.value);
+    }
+    const fechaRealizado = new Date(date.target.value);
+    fechaRealizado.setDate(fechaRealizado.getDate() + 1);
+  }
 
   // Carga los examenes médicos al cargar la página
   useEffect(() => {
@@ -323,8 +358,9 @@ const ExamenesMedicos = () => {
                 labelClass="block text-gray-700 font-bold text-gray-700"
                 type="date"
                 name="fechaRealizado"
+                id="fechaRealizado"
                 value={formData.fechaRealizado}
-                onChange={handleFormChange}
+                onChange={(event) => {handleFormChange(event); handleDates(event)}}
                 classes="w-full p-2 border border-gray-300 rounded-md"
                 error={error?.fechaRealizado}
                 required={true}
@@ -335,8 +371,9 @@ const ExamenesMedicos = () => {
                 labelClass="block text-gray-700 font-bold text-gray-700"
                 type="date"
                 name="fechaVencimiento"
+                id="fechaVencimiento"
                 value={formData.fechaVencimiento}
-                onChange={handleFormChange}
+                onChange={(event) => {handleFormChange(event); handleDates(event)}}
                 classes="w-full p-2 border border-gray-300 rounded-md"
                 error={error?.fechaVencimiento}
                 required={true}
