@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExamenesController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\DocumentoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,3 +32,8 @@ Route::get('/usuarios/{id}', [UsuarioController::class, 'getUserId'])->middlewar
 Route::post('/examenes/add', [ExamenesController::class, 'store'])->middleware('auth:api');
 Route::get('/examenes/usuario/{id}', [ExamenesController::class, 'getUserExamenes'])->middleware('auth:api');
 Route::get('/examenes/download/{filename}', [ExamenesController::class, 'download_file']);
+
+#Documento
+Route::post('/documento/add', [DocumentoController::class, 'store'])->middleware('auth:api');
+Route::get('/documento/usuario/{id}', [DocumentoController::class, 'getUserDocumento'])->middleware('auth:api');
+Route::get('/documento/download/{filename}', [DocumentoController::class, 'download_file']);
