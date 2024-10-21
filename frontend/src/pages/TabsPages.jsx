@@ -56,6 +56,14 @@ const TabsPages = () => {
             Exámenes Médicos
           </Link>
         </li>
+        <li class="mr-1">
+          <Link
+            to="documentos"
+            className="tab-item bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+          >
+            Documentacion
+          </Link>
+        </li>
       </ul>
       <div className="mx-auto p-6 bg-white ">
         <Outlet />

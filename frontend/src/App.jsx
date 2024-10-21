@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import ListaUsuario from "./pages/listaUsuario.jsx";
 import ExamenesMedicos from "./pages/ExamenesMedicos.jsx";
 import TabsPages from "./pages/TabsPages.jsx";
+import Documentos from "./pages/Documentos.jsx";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
             <Route path=":id" element={<TabsPages />}>
               <Route path="datos" index element={<ListaUsuario />} />
               <Route path="examenes" element={<ExamenesMedicos />} />
+              <Route path="documentos" element={<Documentos />} />
+
             </Route>
           </Route>
         </Routes>
