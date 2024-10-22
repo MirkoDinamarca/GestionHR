@@ -63,13 +63,12 @@ const Sidebar = () => {
             <a href="/#" className="flex items-center gap-5 pl-10 tracking-wide"><FontAwesomeIcon size='lg' className="w-5" icon={faCog} /> Configuracion</a>
           </li> */}
         </ul>
-        {/* ESTO DEL BOTON ES TEMPORAL, SOLAMENTE ES PARA PODER CERRAR SESION ACTUALMENTE */}
-        <br />
-        <br />
-        <br />
-        <button onClick={() => handleLogout()} className="bg-indigo-500 text-white uppercase font-bold p-3 rounded-sm mt-5">
-          Cerrar Sesion
-        </button>
+        
+        <div className="flex flex-col">
+          <button onClick={() => handleLogout()} className="bg-indigo-500 text-white uppercase font-bold p-3 rounded-sm mt-5">
+            Cerrar Sesion
+          </button>
+        </div>
           <Link to="/logout" ></Link>
       </div>
     </div>

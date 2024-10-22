@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import Formfield from "../components/Formfield";
 import Integrante from "../components/Integrante";
 import Alerta from "../components/Alerta";
+import { handleDniChange, handleCuilChange } from "../helpers/helpers";
 import axios from "axios";
 
 const NuevoUsuario = () => {
   const navigate = useNavigate();
   const [integrantesFamiliares, setIntegrantesFamiliares] = useState([]);
   const [error, setError] = useState(null);
+  const [provincias, setProvincias] = useState([]);
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -30,6 +32,7 @@ const NuevoUsuario = () => {
     estado_civil: "",
     integrantes: [],
   });
+  const [cuil, setCuil] = useState("");
 
   // Al momento de escuchar por un cambio en los inputs setea el valor en el estado
   const handleChange = (e) => {
@@ -48,6 +51,7 @@ const NuevoUsuario = () => {
       if (!token) {
         navigate("/login");
       }
+
       const response = await axios.post(
         "http://localhost:8000/api/usuarioNuevo",
         formData,
@@ -61,7 +65,6 @@ const NuevoUsuario = () => {
       if (success) {
         navigate('/usuarios');
       }
-      console.log("Usuario creado con éxito:", response.data);
     } catch (e) {
       if (e.response.data.mensaje) {
         setError(e.response.data.mensaje);
@@ -117,7 +120,7 @@ const NuevoUsuario = () => {
       vinculo: "",
       dni: "",
       seguro_vida: "",
-      porcentaje_seguro_vida: "",
+      // porcentaje_seguro_vida: "",
     };
 
     // El formulario del formData se actualiza con el nuevo integrante
@@ -157,6 +160,20 @@ const NuevoUsuario = () => {
       integrantes: integrantes,
     }));
   };
+
+  const _apiProvincias = async () => {
+    try {
+      const response = await axios.get(
+        "https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre"
+      );
+      setProvincias(response.data.provincias);
+    } catch (e) {
+      console.error("Error", e);
+    }
+  }
+  useEffect(() => {
+    _apiProvincias();
+  }, []);
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Crear Nuevo Usuario</h2>
@@ -182,6 +199,7 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el nombre del usuario"
             error={error?.nombre}
+            required={true}
           />
 
           <Formfield
@@ -194,6 +212,7 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el apellido del usuario"
             error={error?.apellido}
+            required={true}
           />
           <Formfield
             label="N° de Legajo"
@@ -214,10 +233,11 @@ const NuevoUsuario = () => {
             type="text"
             name="dni"
             value={formData.dni}
-            onChange={handleChange}
+            onChange={(event) => {handleChange(event); handleDniChange(event, setError)}}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el DNI"
             error={error?.dni}
+            required={true}
           />
 
           <Formfield
@@ -226,10 +246,11 @@ const NuevoUsuario = () => {
             type="text"
             name="cuil"
             value={formData.cuil}
-            onChange={handleChange}
+            onChange={(event) => {handleCuilChange(event, formData, setFormData, setError)}}
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el CUIL"
             error={error?.cuil}
+            required={true}
           />
 
           <Formfield
@@ -242,6 +263,7 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el correo"
             error={error?.email}
+            required={true}
           />
 
           <Formfield
@@ -254,10 +276,11 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la contraseña"
             error={error?.password}
+            required={true}
           />
 
           <Formfield
-            label="Ingrese el telefono"
+            label="Ingrese el teléfono"
             labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
             name="telefono"
@@ -269,12 +292,13 @@ const NuevoUsuario = () => {
           />
 
           <div>
-            <label className="block font-bold text-gray-700">Género:</label>
+            <label className="block font-bold text-gray-700">Género <span className="text-red-600"><small>*</small></span></label>
             <select
               name="genero"
               value={formData.genero}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
+              required
             >
               <option value="">Selecciona una opción</option>
               <option value="Masculino">Masculino</option>
@@ -297,6 +321,7 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             error={error?.fecha_ingreso}
+            required={true}
           />
 
           <Formfield
@@ -308,17 +333,19 @@ const NuevoUsuario = () => {
             onChange={handleChange}
             classes="w-full p-2 border border-gray-300 rounded-md"
             error={error?.fecha_nacimiento}
+            required={true}
           />
 
           <div>
             <label className="block text-gray-700 font-bold">
-              Estado Civil:
+              Estado Civil <span className="text-red-600"><small>*</small></span>
             </label>
             <select
               name="estado_civil"
               value={formData.estado_civil}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
+              required
             >
               <option value="">Selecciona una opción</option>
               <option value="Soltero/a">Soltero/a</option>
@@ -373,6 +400,7 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la ciudad"
             error={error?.ciudad}
+            required={true}
           />
 
           <Formfield
@@ -385,9 +413,35 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese el código postal"
             error={error?.cp}
+            required={true}
           />
 
-          <Formfield
+          <div>
+            <label className="block text-gray-700 font-bold">
+              Provincia <span className="text-red-600"><small>*</small></span>
+            </label>
+            <select
+              name="provincia"
+              value={formData.provincia}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            >
+              <option value="">Selecciona una provincia</option>
+              {provincias.map((provincia) => (
+                <option key={provincia.id} value={provincia.nombre}>
+                  {provincia.nombre}
+                </option>
+              ))}
+            </select>
+            {error?.estado_civil && (
+              <div className="invalid-feedback text-red-600 text-sm font-medium">
+                {error?.estado_civil}
+              </div>
+            )}
+          </div>
+
+          {/* <Formfield
             label="Provincia"
             labelClass="block text-gray-700 font-bold text-gray-700"
             type="text"
@@ -397,7 +451,8 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la provincia"
             error={error?.provincia}
-          />
+            required={true}
+          /> */}
 
           <Formfield
             label="Nacionalidad"
@@ -409,6 +464,7 @@ const NuevoUsuario = () => {
             classes="w-full p-2 border border-gray-300 rounded-md"
             placeholder="Ingrese la nacionalidad"
             error={error?.nacionalidad}
+            required={true}
           />
 
           <hr className="col-span-4 m-3" />
@@ -426,8 +482,10 @@ const NuevoUsuario = () => {
                   key={integrante.id || index}
                   index={index}
                   integrante={integrante}
+                  setError={setError}
                   handleChangeIntegrante={handleChangeIntegrante}
                   handleDeleteIntegrante={handleDeleteIntegrante}
+                  handleDniChange={handleDniChange}
                 />
               ))}
             </section>

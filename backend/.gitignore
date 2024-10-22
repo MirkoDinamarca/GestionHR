@@ -3,6 +3,9 @@
 /public/build
 /public/hot
 /public/storage
+/public/archivos_documento
+/public/archivos_examenes
+/public/archivos_sanciones
 /storage/*.key
 /vendor
 .env

@@ -40,8 +40,8 @@ class UsuarioController extends Controller
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
             'legajo' => 'required|string|unique:usuarios',
-            'dni' => 'required|string|unique:usuarios',
-            'cuil' => 'required|string|unique:usuarios',
+            'dni' => 'required|digits_between:7,8|unique:usuarios',
+            'cuil' => ['required', 'string', 'regex:/^(\d{2})-(\d{8})-(\d{1})$/', 'unique:usuarios'],
             'email' => 'required|string|email|unique:usuarios',
             'password' => 'required|min:8',
             'telefono' => 'nullable|integer',
@@ -69,7 +69,7 @@ class UsuarioController extends Controller
 
         // Validar que cada campo de integrante sea requerido
         foreach ($integrantes as $integrante) {
-            if (!isset($integrante['nombre']) || !isset($integrante['apellido']) || !isset($integrante['convive']) || !isset($integrante['vinculo']) || !isset($integrante['dni']) || !isset($integrante['seguro_vida']) || !isset($integrante['porcentaje_seguro_vida'])) {
+            if (!isset($integrante['nombre']) || !isset($integrante['apellido']) || !isset($integrante['convive']) || !isset($integrante['vinculo']) || !isset($integrante['dni']) || !isset($integrante['seguro_vida'])) {
                 return response()->json([
                     'mensaje' => 'Los campos de cada integrante son requeridos'
                 ], 400);
@@ -120,7 +120,7 @@ class UsuarioController extends Controller
                 'vinculo' => $integrante['vinculo'],
                 'dni' => $integrante['dni'],
                 'seguro_vida' => $integrante['seguro_vida'],
-                'porcentaje_seguro_vida' => $integrante['porcentaje_seguro_vida'],
+                // 'porcentaje_seguro_vida' => $integrante['porcentaje_seguro_vida'],
                 'usuario_id' => $user->id,
             ]);
         }

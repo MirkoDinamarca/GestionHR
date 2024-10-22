@@ -17,7 +17,7 @@ class FamiliaEmpleado extends Model
         'vinculo',
         'dni',
         'seguro_vida',
-        'porcentaje_seguro_vida',
+        // 'porcentaje_seguro_vida',
         'usuario_id'
     ];
 }

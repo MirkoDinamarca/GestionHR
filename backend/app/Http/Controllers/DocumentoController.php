@@ -10,17 +10,14 @@ use App\Models\ArchivosDocumento;
 use Illuminate\Support\Facades\Hash;
 
 class DocumentoController extends Controller
-{
-  
+{   
     public function store(Request $request) {
-        
         $request->validate([
             'titulo_documento' => 'required|string',
             'fecha_otorgado' => 'required|date',
             'fecha_vencimiento' => 'required|date',
             'observacion' => 'required|string',
             'archivos.*' => 'file|mimes:jpg,png,pdf|max:2048'
-          
         ]);
 
         $documento = Documento::create([
@@ -29,7 +26,6 @@ class DocumentoController extends Controller
             'fecha_vencimiento' => $request->fecha_vencimiento,
             'observacion' => $request->observacion,
             'usuario_id' => $request->usuario_id,
-
         ]);
 
         if ($request->hasFile('archivos')) {
@@ -37,14 +33,13 @@ class DocumentoController extends Controller
                 $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
                 $archivo->move(public_path('archivos_documento'), $nombreArchivo);
                 ArchivosDocumento::create([
-                    'archivo' => $nombreArchivo,
+                    'name' => $nombreArchivo,
                     'documento_id' => $documento->id
                 ]);
             }
         }
-
         
-        $documento =Documento::where('usuario_id', $request->usuario_id)->get();
+        $documento = Documento::where('usuario_id', $request->usuario_id)->get();
         $documento->load('archivos');
 
         return response()->json([

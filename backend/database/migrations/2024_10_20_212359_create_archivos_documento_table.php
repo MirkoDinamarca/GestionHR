@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('archivos_documento', function (Blueprint $table) {
            
                 $table->id();
-                $table->string('archivo');
+                $table->string('name');
                 $table->unsignedBigInteger('documento_id');
                 $table->foreign('documento_id')->references('id')->on('documento')->onDelete('cascade');
                 $table->timestamps();

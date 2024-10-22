@@ -38,7 +38,7 @@ const TabsPages = () => {
   return (
     <>
       <ul className="flex border-b tab-buttons">
-        <li class="mr-1">
+        <li className="mr-1">
           <Link
             to="datos"
             state= {{ usuario }}
@@ -48,7 +48,7 @@ const TabsPages = () => {
           </Link>
         </li>
 
-        <li class="mr-1">
+        <li className="mr-1">
           <Link
             to="examenes"
             className="tab-item bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
@@ -64,8 +64,16 @@ const TabsPages = () => {
             Documentacion
           </Link>
         </li>
+        <li className="mr-1">
+          <Link
+            to="sanciones"
+            className="tab-item bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+          >
+            Sanciones
+          </Link>
+        </li>
       </ul>
-      <div className="mx-auto p-6 bg-white ">
+      <div className="mx-auto p-6 bg-white">
         <Outlet />
       </div>
     </>

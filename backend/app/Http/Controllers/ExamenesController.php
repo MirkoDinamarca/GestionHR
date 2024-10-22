@@ -33,7 +33,7 @@ class ExamenesController extends Controller
                 $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
                 $archivo->move(public_path('archivos_examenes'), $nombreArchivo);
                 ArchivosExamenes::create([
-                    'archivo' => $nombreArchivo,
+                    'name' => $nombreArchivo,
                     'examen_id' => $examen->id
                 ]);
             }

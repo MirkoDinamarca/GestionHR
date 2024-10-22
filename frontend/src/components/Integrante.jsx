@@ -1,6 +1,5 @@
 import Formfield from "./Formfield";
-import { useState } from "react";
-const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteIntegrante}) => {
+const Integrante = ({index, integrante, setError, handleChangeIntegrante, handleDeleteIntegrante, handleDniChange}) => {
 
   return (
     <div className="grid grid-cols-6 gap-4 bg-gray-100 p-3 py-5 rounded-md border">
@@ -74,7 +73,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
         type="text"
         name='dni'
         value={integrante.dni}
-        onChange={(e) => handleChangeIntegrante(index, 'dni', e.target.value)}
+        onChange={(event) => {handleChangeIntegrante(index, 'dni', event.target.value); handleDniChange(event, setError)}}
         classes="w-full p-2 border border-gray-300 rounded-md"
         placeholder="Ingrese el DNI del integrante"
       />
@@ -95,7 +94,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
         </select>
       </div>
 
-      <Formfield
+      {/* <Formfield
         divClass="col-span-2"
         label="En caso de seleccionar 'Si' ingrese el porcentaje"
         labelClass="block font-bold text-gray-700"
@@ -105,7 +104,7 @@ const Integrante = ({index, integrante, handleChangeIntegrante, handleDeleteInte
         onChange={(e) => handleChangeIntegrante(index, 'porcentaje_seguro_vida', e.target.value)}
         classes="w-full p-2 border border-gray-300 rounded-md"
         placeholder="Ingrese un porcentaje"
-      />
+      /> */}
     </div>
   );
 };

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('archivos_examenes', function (Blueprint $table) {
+        Schema::create('locaciones', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('examen_id');
-            $table->foreign('examen_id')->references('id')->on('examenes_medicos')->onDelete('cascade');
+            $table->string('nombre');
+            $table->tinyInteger('activo')->default(1);
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('archivos_examenes');
+        Schema::dropIfExists('locaciones');
     }
 };

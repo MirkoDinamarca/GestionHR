@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ArchivosExamenes extends Model
+class ArchivosSanciones extends Model
 {
     use HasFactory;
-
-    protected $table = 'archivos_examenes';
+    protected $table = 'archivos_sanciones';
 
     protected $fillable = [
         'name',
-        'examen_id',
+        'sancion_id',
     ];
 
-    public function examen() {
-        return $this->belongsTo(Examenes::class, 'examen_id');
+    public function sancion() {
+        return $this->belongsTo(Examenes::class, 'sancion_id');
     }
 }

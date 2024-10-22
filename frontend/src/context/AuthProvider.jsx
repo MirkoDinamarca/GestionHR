@@ -21,9 +21,6 @@ export const AuthProvider = ({ children }) => {
       const token = response.data.token;
       const usuario = response.data.usuario;
 
-      console.log('Usuario ', usuario);
-      console.log('Token ', token);
-
       if (usuario) {
         setToken(token);
         localStorage.setItem("token", token);
@@ -37,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log('Error desde el catch', error.response.data.mensaje)
       setAuth({ error: error.response?.data?.mensaje || "Error de autenticación" });	
-      console.log('La autenticacion', auth);
       setLoading(false);
     }
   };

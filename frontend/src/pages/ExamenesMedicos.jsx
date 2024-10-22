@@ -39,19 +39,18 @@ const ExamenesMedicos = () => {
       archivosContainer.innerHTML = "";
       for (let i = 0; i < examen.archivos.length; i++) {
         const archivo = examen.archivos[i];
-        console.log("Archivo => ", archivo);
         const article = document.createElement("article");
         const spanName = document.createElement("span");
         const spanDownload = document.createElement("span");
         spanName.className =
           "bg-gray-100 p-1 border border-blue-200 border-r-0 rounded-md rounded-tr-none rounded-br-none";
-        spanName.textContent = archivo.archivo;
+        spanName.textContent = archivo.name;
         spanDownload.className =
           "p-1 bg-blue-100 border border-blue-200 border-l-0 rounded-md rounded-tl-none rounded-bl-none text-blue-500 hover:bg-blue-200 transition-all duration-150 cursor-pointer";
         spanDownload.textContent = "Descargar";
         spanDownload.addEventListener("click", () =>
           window.open(
-            `http://localhost:8000/api/examenes/download/${archivo.archivo}`
+            `http://localhost:8000/api/examenes/download/${archivo.name}`
           )
         );
         article.className = "flex";
@@ -118,7 +117,6 @@ const ExamenesMedicos = () => {
       // Actualizar la tabla de examenes
       setExamenes(examenes);
 
-      console.log("Examen médico agregado", response.data);
     } catch (error) {
       if (error.response.data.mensaje) {
         setError(error.response.data.mensaje);
@@ -148,7 +146,6 @@ const ExamenesMedicos = () => {
         }
       );
       setExamenes(response.data.examenes);
-      console.log("Examenes médicos", response.data.examenes);
     } catch (error) {
       console.error("Error al obtener los examenes", error);
     }
@@ -159,7 +156,6 @@ const ExamenesMedicos = () => {
    */
   const handleFileChange = (e) => {
     e.preventDefault();
-    console.log('Entra aca si en el handleFileChange');
     let nuevosArchivos = Array.from(e.target.files);
 
     // Verificar que los archivos sean png, jpg o pdf y mostrar un error si no lo son
@@ -168,7 +164,6 @@ const ExamenesMedicos = () => {
       (archivo) => !tiposPermitidos.includes(archivo.type)
     );
     if (archivosInvalidos.length > 0) {
-      console.log('Entro al if de archivos invalidos');
       let errorArchivo = {
         archivos: "Solo se permiten archivos png, jpg, jpeg o pdf",
       }
@@ -233,7 +228,6 @@ const ExamenesMedicos = () => {
    * Cuando escucha un cambio en las fechas, si es la 'Fecha Realizado', coloca un atributo mínimo en la 'Fecha Vencimiento'
    */
   const handleDates = (date) => {
-    console.log('Date ID', date.target.id)
     if (date.target.id == 'fechaRealizado') {
       document.getElementById('fechaVencimiento').setAttribute('min', date.target.value);	
     } else {

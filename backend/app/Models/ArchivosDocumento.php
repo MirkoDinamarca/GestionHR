@@ -12,7 +12,7 @@ class ArchivosDocumento extends Model
     protected $table = 'archivos_documento';
 
     protected $fillable = [
-        'archivo',
+        'name',
         'documento_id',
     ];
 

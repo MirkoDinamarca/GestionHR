@@ -145,14 +145,14 @@ const UsuarioDetalles = () => {
                     <p>No especificado</p>
                   )}
                 </div>
-                <div>
+                {/* <div>
                   <p className="font-semibold mr-2">Porcentaje Seguro:</p>
                   {familiar.seguro_vida === "1" ? (
                     <p>{familiar.porcentaje_seguro_vida}%</p>
                   ) : (
                     <p>No es Beneficiario</p>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           ))}

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('vinculo');
             $table->string('dni');
             $table->string('seguro_vida');
-            $table->integer('porcentaje_seguro_vida')->nullable();
+            // $table->integer('porcentaje_seguro_vida')->nullable();
             $table->unsignedBigInteger('usuario_id');
             $table->foreign('usuario_id')->references('id')->on('usuarios');
             $table->timestamps();
